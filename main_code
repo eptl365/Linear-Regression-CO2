@@ -18,7 +18,7 @@ y = df['CO2 Emissions(g/km)'].values
 theta0 = 0.0
 theta1 = 0.0
 theta2 = 0.0
-alpha = 0.01
+alpha = 0.0001
 epochs = 100
 m = len(y)
 startingCost = compute_cost(theta0, theta1, theta2, X1, X2, y)
@@ -61,11 +61,81 @@ for i in range(epochs):
         plt.ylabel("CO2 Emissions")
         plt.show()
 
+        #CONTOUR GRAPH
+
+        #######
+        engine_size_grid, cylinders_grid = np.meshgrid(
+            np.linspace(min(X1), max(X1), 100),
+            np.linspace(min(X2), max(X2), 100)
+        )
+        
+        # Predict CO2 on the grid using trained parameters
+        CO2_pred = theta0 + theta1*engine_size_grid + theta2*cylinders_grid
+        
+        # Create contour plot
+        plt.figure(figsize=(8,6))
+        contour = plt.contourf(engine_size_grid, cylinders_grid, CO2_pred, 
+                               levels=20, cmap='viridis', alpha=0.8)
+        
+        # Plot the actual data points
+        plt.scatter(X1, X2, c=y, edgecolors='black', cmap='viridis', label="Actual Data")
+        
+        # Add color bar to show CO2 levels
+        cbar = plt.colorbar(contour)
+        cbar.set_label("Predicted CO2 Emissions")
+        
+        # Labels and title
+        plt.xlabel("Engine Size")
+        plt.ylabel("Cylinders")
+        plt.title("Contour Plot: CO2 Emissions vs Engine Size & Cylinders")
+        plt.legend()
+        plt.show()
+
+
 # Print final statistics ---
 print("Final theta0:", theta0)
 print("Final theta1:", theta1)
 print("Final theta2:", theta2)
 print("Final cost:", costs[-1])
+
+
+
+
+#CONTOUR GRAPH
+
+#######
+engine_size_grid, cylinders_grid = np.meshgrid(
+    np.linspace(min(X1), max(X1), 100),
+    np.linspace(min(X2), max(X2), 100)
+)
+
+# Predict CO2 on the grid using trained parameters
+CO2_pred = theta0 + theta1*engine_size_grid + theta2*cylinders_grid
+
+# Create contour plot
+plt.figure(figsize=(8,6))
+contour = plt.contourf(engine_size_grid, cylinders_grid, CO2_pred, 
+                       levels=20, cmap='viridis', alpha=0.8)
+
+# Plot the actual data points
+plt.scatter(X1, X2, c=y, edgecolors='black', cmap='viridis', label="Actual Data")
+
+# Add color bar to show CO2 levels
+cbar = plt.colorbar(contour)
+cbar.set_label("Predicted CO2 Emissions")
+
+# Labels and title
+plt.xlabel("Engine Size")
+plt.ylabel("Cylinders")
+plt.title("Contour Plot: CO2 Emissions vs Engine Size & Cylinders")
+plt.legend()
+plt.show()
+
+
+
+
+
+
 
 # Plot cost over time ---
 plt.plot(range(epochs), costs, color="green")
