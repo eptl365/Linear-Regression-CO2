@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("/Users/eshanpatel/Downloads/co2.csv")
+df = pd.read_csv('co2.csv')
 
 #cost function
 def compute_cost(theta0, theta1, theta2, X1, X2, y):
