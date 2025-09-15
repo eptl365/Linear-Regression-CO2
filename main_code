@@ -1,0 +1,75 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("/Users/eshanpatel/Downloads/co2.csv")
+
+#cost function
+def compute_cost(theta0, theta1, theta2, X1, X2, y):
+    y_hat = theta0 + theta1*X1 + theta2*X2
+    errors = y_hat - y
+    return np.dot(errors, errors) / (2*m)
+
+
+#defining values
+X1 = df['Engine Size(L)'].values
+X2 = df['Cylinders'].values
+y = df['CO2 Emissions(g/km)'].values
+theta0 = 0.0
+theta1 = 0.0
+theta2 = 0.0
+alpha = 0.01
+epochs = 100
+m = len(y)
+startingCost = compute_cost(theta0, theta1, theta2, X1, X2, y)
+
+#printing initial values
+print("Starting theta0:", theta0)
+print("Starting theta1:", theta1)
+print("Starting theta2:", theta2)
+print("Learning rate (alpha):", alpha)
+print("Epochs:", epochs)
+print("Starting Cost:", startingCost)
+
+
+
+#loop for gradient descent
+costs = []
+for i in range(epochs):
+    y_hat = theta0 + theta1*X1 + theta2*X2
+    errors = y_hat - y
+
+    # Compute gradients
+    grad_theta0 = (1/m) * np.sum(errors)
+    grad_theta1 = (1/m) * np.sum(errors * X1)
+    grad_theta2 = (1/m) * np.sum(errors * X2)
+
+    # Update parameters
+    theta0 -= alpha * grad_theta0
+    theta1 -= alpha * grad_theta1
+    theta2 -= alpha * grad_theta2
+
+    J = compute_cost(theta0, theta1, theta2, X1, X2, y)
+    costs.append(J)
+
+    # Plot hypothesis line every 20 iterations
+    if i % 20 == 0:
+        plt.scatter(X1, y, color="blue")
+        plt.plot(X1, theta0 + theta1*X1 + theta2*X2, color="red")
+        plt.title(f"Epoch {i}")
+        plt.xlabel("Engine Size")
+        plt.ylabel("CO2 Emissions")
+        plt.show()
+
+# Print final statistics ---
+print("Final theta0:", theta0)
+print("Final theta1:", theta1)
+print("Final theta2:", theta2)
+print("Final cost:", costs[-1])
+
+# Plot cost over time ---
+plt.plot(range(epochs), costs, color="green")
+plt.title("Cost Reduction Over Time")
+plt.xlabel("Epoch")
+plt.ylabel("Cost (MSE)")
+plt.show()
